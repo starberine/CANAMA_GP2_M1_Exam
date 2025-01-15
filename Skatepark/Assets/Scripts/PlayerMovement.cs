@@ -1,51 +1,50 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 6.0f; // Movement speed
+    public float speed = 6.0f; // Base movement speed
     public float jumpHeight = 1.5f; // Jump height
-    public float gravity = -20.0f; // Gravity force (increased for quicker descent)
+    public float gravity = -20.0f; // Gravity force
 
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
-    private bool canJump = true; // Prevent jump spamming
+    private bool canJump = true;
 
-    public Transform groundCheck; // Empty GameObject to check if the player is on the ground
-    public float groundDistance = 0.4f; // Radius of the sphere for ground check
-    public LayerMask groundMask; // Layer mask for ground
+    public Transform groundCheck;
+    public float groundDistance = 0.4f;
+    public LayerMask groundMask;
 
-    public float rotationSpeed = 5.0f; // Rotation speed multiplier
+    public float rotationSpeed = 5.0f;
 
-    void Start()
+    private void Start()
     {
         controller = GetComponent<CharacterController>();
     }
 
-    void Update()
+    private void Update()
     {
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f; // Reset velocity when grounded
-            canJump = true; // Allow jumping again
+            velocity.y = -2f;
+            canJump = true;
         }
 
-        // Get input for movement
+        // Movement
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
 
-        // Adjust movement for slopes
         if (isGrounded)
         {
             move = Vector3.ProjectOnPlane(move, GetGroundNormal());
         }
 
-        // Rotate player to face the movement direction
         if (move.magnitude > 0.1f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(move);
@@ -54,14 +53,13 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        // Jump only while grounded
+        // Jump
         if (Input.GetButtonDown("Jump") && isGrounded && move.magnitude > 0.1f && canJump)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            canJump = false; // Disable jumping until grounded again
+            canJump = false;
         }
 
-        // Prevent further jumping until grounded
         if (!isGrounded)
         {
             canJump = false;
@@ -80,5 +78,15 @@ public class PlayerMovement : MonoBehaviour
             return hit.normal;
         }
         return Vector3.up;
+    }
+
+    public IEnumerator ActivateSpeedBoost(float boostAmount, float duration)
+    {
+        float originalSpeed = speed;
+        speed = boostAmount;
+
+        yield return new WaitForSeconds(duration);
+
+        speed = originalSpeed;
     }
 }
