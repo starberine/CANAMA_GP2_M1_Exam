@@ -3,10 +3,10 @@ using System.Collections;
 
 public class SpeedBoost : MonoBehaviour
 {
-    public float boostAmount = 12.0f; // Speed boost amount
-    public float boostDuration = 2.0f; // How long the boost lasts (2 seconds)
-    public float respawnTime = 3.0f; // Time before the power-up respawns
-    public Transform[] spawnPoints; // List of spawn points for the power-up
+    public float boostAmount = 12.0f; 
+    public float boostDuration = 2.0f; 
+    public float respawnTime = 3.0f; 
+    public Transform[] spawnPoints; 
 
     private void OnTriggerEnter(Collider other)
     {
@@ -18,21 +18,21 @@ public class SpeedBoost : MonoBehaviour
                 StartCoroutine(playerMovement.ActivateSpeedBoost(boostAmount, boostDuration));
             }
 
-            // Start the respawn process
+            
             StartCoroutine(Respawn());
         }
     }
 
     private IEnumerator Respawn()
     {
-        // Hide the power-up
+        
         Debug.Log("Power-up collected. Starting respawn process.");
         gameObject.SetActive(false);
 
-        // Wait for respawn time
+        
         yield return new WaitForSeconds(respawnTime);
 
-        // Respawn at a random location
+        
         if (spawnPoints.Length > 0)
         {
             Transform randomSpawn = spawnPoints[Random.Range(0, spawnPoints.Length)];
@@ -44,7 +44,7 @@ public class SpeedBoost : MonoBehaviour
             Debug.LogWarning("No spawn points available for respawning.");
         }
 
-        // Reactivate the power-up
+        
         gameObject.SetActive(true);
         Debug.Log("Power-up is now active.");
     }

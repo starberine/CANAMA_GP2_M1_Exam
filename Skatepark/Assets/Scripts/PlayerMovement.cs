@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 6.0f; // Base movement speed
-    public float jumpHeight = 1.5f; // Jump height
-    public float gravity = -20.0f; // Gravity force
+    public float speed = 6.0f; 
+    public float jumpHeight = 1.5f; 
+    public float gravity = -20.0f; 
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // Ground check
+        
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
             canJump = true;
         }
 
-        // Movement
+        
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        // Jump
+        
         if (Input.GetButtonDown("Jump") && isGrounded && move.magnitude > 0.1f && canJump)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
             canJump = false;
         }
 
-        // Apply gravity
+        
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }

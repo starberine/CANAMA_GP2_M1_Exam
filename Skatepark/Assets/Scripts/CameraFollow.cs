@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform player; // Reference to the player's Transform
-    public Vector3 offset = new Vector3(0, 2, -5); // Offset for third-person perspective
-    public float smoothSpeed = 0.2f; // Smooth follow speed
-    public float rotationSpeed = 3f; // Speed for RMB camera control
+    public Transform player; 
+    public Vector3 offset = new Vector3(0, 2, -5); 
+    public float smoothSpeed = 0.2f; 
+    public float rotationSpeed = 3f; 
 
-    private float yaw = 0f; // Horizontal rotation
-    private float pitch = 15f; // Vertical rotation (default pitch for a better view)
+    private float yaw = 0f; 
+    private float pitch = 15f; 
 
     private void Start()
     {
@@ -26,28 +26,28 @@ public class CameraFollow : MonoBehaviour
     {
         if (player != null)
         {
-            // Handle manual camera rotation with RMB
-            if (Input.GetMouseButton(1)) // Right Mouse Button pressed
+            
+            if (Input.GetMouseButton(1)) 
             {
                 yaw += Input.GetAxis("Mouse X") * rotationSpeed;
                 pitch -= Input.GetAxis("Mouse Y") * rotationSpeed;
-                pitch = Mathf.Clamp(pitch, -35f, 60f); // Clamp pitch to prevent extreme angles
+                pitch = Mathf.Clamp(pitch, -35f, 60f); 
             }
             else
             {
-                // Automatically align the camera behind the player
+                
                 yaw = Mathf.LerpAngle(yaw, player.eulerAngles.y, Time.deltaTime * rotationSpeed);
             }
 
-            // Calculate the rotation and position of the camera
+            
             Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
             Vector3 targetPosition = player.position + rotation * offset;
 
-            // Smoothly move the camera to the target position
+            
             transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
 
-            // Look at the player
-            transform.LookAt(player.position + Vector3.up * 1.5f); // Slightly above the player's center
+            
+            transform.LookAt(player.position + Vector3.up * 1.5f); 
         }
         else
         {
